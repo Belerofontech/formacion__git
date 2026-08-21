@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Preparación del entorno de trabajo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Preparación del entorno de trabajo</h1>
+        <p>Buenas prácticas en Python</p>
+      </section>
+
+      <section data-markdown>
+        <textarea data-template>
+          ## Partimos de la base
+
+          - Windows
+          - VS Code instalado
+          - Python y pip ya instalados
+          - Git instalado
+
+          Note: un entorno mal preparado es la fuente habitual de errores
+          confusos (paquetes que "no se encuentran", intérpretes
+          equivocados...) que no tienen que ver con el código en sí.
+        </textarea>
+      </section>
+
+      <section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Extensiones de VS Code
+
+            - **Python**: soporte esencial (autocompletado, linting, debug,
+              selector de intérprete)
+            - **GitLens**: quién y cuándo modificó cada línea, historial,
+              comparación de cambios
+            - **autoDocstring**: plantilla de docstring automática al
+              escribir `"""`
+          </textarea>
+        </section>
+        <section>
+          <h3>Instalar una extensión</h3>
+          <p>Abrir el panel de extensiones → buscar el nombre → "Install"</p>
+          <img src="../imagenes/imagen-003.png" alt="Panel de extensiones de VS Code">
+          <aside class="notes">
+            Ojo con extensiones de nombre parecido pero de otro autor.
+          </aside>
+        </section>
+        <section>
+          <h3>Python</h3>
+          <img src="../imagenes/imagen-007.png" alt="Búsqueda de la extensión Python en el marketplace">
+        </section>
+        <section>
+          <h3>GitLens</h3>
+          <img src="../imagenes/imagen-004.png" alt="Búsqueda de la extensión GitLens en el marketplace">
+        </section>
+        <section>
+          <h3>autoDocstring</h3>
+          <img src="../imagenes/imagen-008.png" alt="Búsqueda de la extensión autoDocstring en el marketplace">
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Entornos virtuales</h2>
+          <p>Uno por proyecto: evita conflictos de dependencias</p>
+          <aside class="notes">
+            Ejercicio: crear un entorno, activarlo, instalar un paquete,
+            desactivarlo y luego repetir el proceso con un proyecto que ya
+            trae su propio requirements.txt. Vamos paso a paso en pantalla
+            para que lo sigan en su máquina.
+          </aside>
+        </section>
+        <section>
+          <h3>Crear</h3>
+          <pre><code class="language-powershell" data-trim>
+            python -m venv venv
+          </code></pre>
+          <aside class="notes">
+            -m venv ejecuta el módulo venv de la librería estándar. El
+            segundo "venv" es el nombre de la carpeta del entorno (podría
+            ser cualquier otro).
+          </aside>
+        </section>
+        <section>
+          <h3>Activar</h3>
+          <pre><code class="language-powershell" data-trim>
+            .\venv\Scripts\Activate.ps1
+          </code></pre>
+          <aside class="notes">
+            El prompt pasa a mostrar (venv). Si PowerShell se queja de que
+            no puede ejecutar scripts:
+            Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+          </aside>
+        </section>
+        <section>
+          <h3>Instalar un paquete</h3>
+          <pre><code class="language-powershell" data-trim>
+            pip install requests
+          </code></pre>
+          <aside class="notes">
+            Con el entorno activo, el paquete se instala solo dentro de
+            venv, sin tocar la instalación base del sistema.
+          </aside>
+        </section>
+        <section>
+          <h3>Desactivar</h3>
+          <pre><code class="language-powershell" data-trim>
+            deactivate
+          </code></pre>
+          <aside class="notes">
+            Volvemos al python/pip del sistema. La carpeta venv sigue ahí
+            con el paquete instalado.
+          </aside>
+        </section>
+        <section>
+          <h3>Un proyecto ya existente</h3>
+          <pre><code class="language-powershell" data-trim>
+            Remove-Item -Recurse -Force venv
+            python -m venv venv
+            .\venv\Scripts\Activate.ps1
+            pip install -r requirements.txt
+          </code></pre>
+          <aside class="notes">
+            Borramos primero el venv anterior para partir de un entorno
+            limpio (reutilizamos el mismo nombre de carpeta). -r
+            requirements.txt instala de golpe todos los paquetes y
+            versiones listados en el fichero: así cualquiera recrea el
+            mismo entorno con un único comando.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <h2>Vincular Python con VS Code</h2>
+        <img src="../imagenes/imagen-001.png" alt="Selector de intérprete de Python en VS Code">
+        <aside class="notes">
+          Esquina inferior derecha de VS Code: información del intérprete
+          activo, gracias a la extensión de Python.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Si el entorno no aparece listado</h2>
+        <img src="../imagenes/imagen-002.png" alt="Panel de selección de intérprete de Python">
+        <aside class="notes">
+          Se puede introducir la ruta del ejecutable directamente.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

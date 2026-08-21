@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Testing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Testing</h1>
+      </section>
+
+      <section>
+        <h2>¿Por qué testing?</h2>
+        <aside class="notes">
+          Charla libre. Ideas a tocar: depurar con pdb resuelve un error
+          puntual, pero no evita que reaparezca; un test es la red de
+          seguridad que permite tocar el código (refactorizar) sin miedo
+          a romper algo sin enterarte; un error detectado ahora es
+          barato, el mismo error en producción es caro; un test también
+          documenta qué se espera de una función, de forma explícita y
+          ejecutable (no un comentario que se queda desactualizado).
+        </aside>
+      </section>
+
+      <section data-markdown>
+        <textarea data-template>
+          ## Varias formas de testear
+
+          - Manual: `assert` sueltos en un script, a mano
+          - `unittest` (librería estándar): clases, `TestCase`,
+            `assertEqual`
+          - `pytest`: funciones sueltas, `assert` normal
+
+          Note: unittest no es mala opción (viene en la librería estándar,
+          sin instalar nada), pero pytest se ha vuelto el estándar de facto
+          en proyectos nuevos por lo poco que pide para arrancar.
+        </textarea>
+      </section>
+
+      <section data-markdown>
+        <textarea data-template>
+          ## La idea básica (pytest)
+
+          - Un test es una función que empieza por `test_`
+          - Sin clases, sin herencia: solo `assert`
+          - `pytest` los descubre y los ejecuta solos
+
+          Note: un fichero test_algo.py con funciones test_algo ya es una
+          suite de tests, sin configuración adicional.
+        </textarea>
+      </section>
+
+      <section>
+        <section>
+          <h2>Ojo con los floats</h2>
+          <pre><code class="language-python" data-trim>
+            >>> 0.1 + 0.2 == 0.3
+            False
+          </code></pre>
+          <aside class="notes">
+            Por cómo se representan internamente, dos operaciones con
+            decimales que deberían dar el mismo resultado matemático
+            pueden no ser iguales bit a bit. Especialmente relevante
+            trabajando con importes, tipos de interés o cualquier cálculo
+            financiero con decimales.
+          </aside>
+        </section>
+        <section>
+          <h3>¿Cómo lo comprobamos en un test?</h3>
+          <p>Pista: pytest trae una función para comparar con tolerancia</p>
+          <p><a href="https://docs.pytest.org/en/stable/reference/reference.html#pytest-approx">docs.pytest.org → pytest.approx</a></p>
+          <aside class="notes">
+            No desvelar la sintaxis todavía: que la busquen en la
+            documentación y la apliquen ellos mismos en la Práctica 1
+            (test_suma_decimales, ya está el hueco en el fichero).
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Práctica 1</h2>
+          <p><code>practicas/testing/test_operaciones.py</code></p>
+          <p>Tests para <code>suma</code>/<code>resta</code>, incluyendo el
+            caso con decimales (pista: slide anterior)</p>
+          <aside class="notes">
+            Solución en practicas/testing/solucion/ si hace falta
+            destaparla.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            pytest practicas/testing
+          </code></pre>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Práctica 2</h2>
+          <p>Testing, pero de los datos en vez del código</p>
+          <aside class="notes">
+            pandera declara el esquema que debe cumplir un DataFrame,
+            igual que un type hint declara el tipo de un parámetro.
+          </aside>
+        </section>
+        <section>
+          <h3>La sintaxis</h3>
+          <pre><code class="language-python" data-trim>
+            import pandera.polars as pa
+
+
+            class Numeros(pa.DataFrameModel):
+                valor: int = pa.Field(ge=0)
+          </code></pre>
+          <aside class="notes">
+            Mismo mecanismo que un type hint: nombre de columna, tipo, y
+            opcionalmente un pa.Field con la restricción (ge, le, gt...).
+            Esto es solo el mecanismo — el caso real va en la práctica.
+          </aside>
+        </section>
+        <section>
+          <h3>El caso: movimientos bancarios</h3>
+          <p><code>practicas/testing/validacion.py</code></p>
+          <ul>
+            <li><code>id_cliente</code>: entero positivo</li>
+            <li><code>importe</code>: float entre -10.000 y 10.000</li>
+          </ul>
+          <p><a href="https://pandera.readthedocs.io/en/stable/polars.html">pandera.readthedocs.io → polars</a></p>
+          <aside class="notes">
+            El TODO ya está en el fichero, con esta misma pista. Solución
+            en practicas/testing/solucion/validacion.py.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            pytest practicas/testing
+          </code></pre>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Si da tiempo</h2>
+          <p>No todo es comprobar un valor de retorno</p>
+          <aside class="notes">
+            A veces lo que importa es que la función falle de forma
+            controlada ante una entrada inválida, no que devuelva
+            cualquier cosa.
+          </aside>
+        </section>
+        <section>
+          <h3>Práctica</h3>
+          <p><code>practicas/testing/si_da_tiempo/operaciones.py</code></p>
+          <pre><code class="language-python" data-trim>
+            def dividir(a: float, b: float) -> float:
+                if b == 0:
+                    raise ValueError("No se puede dividir por cero")
+                return a / b
+          </code></pre>
+          <p>Testear <code>dividir</code> (ya escrita) — pista: <code>pytest.raises</code></p>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            pytest practicas/testing/si_da_tiempo
+          </code></pre>
+          <aside class="notes">
+            with pytest.raises(ValueError): falla el test si el bloque de
+            dentro NO lanza ValueError. Solución en
+            practicas/testing/si_da_tiempo/solucion/.
+          </aside>
+        </section>
+        <section>
+          <h3>Para seguir profundizando</h3>
+          <p><a href="https://docs.pytest.org/en/stable/how-to/fixtures.html">Fixtures</a> — datos de prueba reutilizables entre tests</p>
+          <p><a href="https://docs.pytest.org/en/stable/how-to/parametrize.html">Parametrize</a> — un test, varios casos de entrada/salida</p>
+          <p><a href="https://en.wikipedia.org/wiki/Test-driven_development">TDD</a> — escribir primero el test, luego el código</p>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+Este fichero es solo un ejemplo del formato.
+
+Cada participante crea el suyo propio en esta misma carpeta,
+con su nombre como nombre de fichero (por ejemplo: ana.txt),
+y el contenido que quiera (una frase basta).

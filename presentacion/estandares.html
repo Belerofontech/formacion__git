@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Estándares de escritura de código</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Estándares de escritura de código</h1>
+      </section>
+
+      <section>
+        <h2>¿Por qué estandarizar?</h2>
+        <aside class="notes">
+          Charla libre. Ideas a tocar: cualquiera puede leer/modificar el
+          código de otra persona sin adaptarse a un estilo distinto, menos
+          discusiones subjetivas en code review, errores más fáciles de
+          detectar a simple vista.
+        </aside>
+      </section>
+
+      <section>
+        <h2>PEP 8</h2>
+        <p><a href="https://peps.python.org/pep-0008/">peps.python.org/pep-0008</a></p>
+        <p>La guía de estilo oficial de Python</p>
+        <aside class="notes">
+          Es la referencia de facto. No hace falta seguirla a mano: para
+          eso están isort y black, que vemos al final de este bloque.
+        </aside>
+      </section>
+
+      <section>
+        <section>
+          <h2>Nombres significativos</h2>
+          <p>PEP8 fija la forma, no si el nombre dice algo</p>
+        </section>
+        <section>
+          <pre><code class="language-python" data-trim>
+            def f(l):
+                t = 0
+                for x in l:
+                    t += x
+                return t
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="language-python" data-trim>
+            def sumar_lista(numeros):
+                total = 0
+                for numero in numeros:
+                    total += numero
+                return total
+          </code></pre>
+          <aside class="notes">
+            Misma función, pero la firma ya adelanta qué hace sin leer el
+            cuerpo ni necesitar un comentario.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Práctica</h2>
+          <p>De código desordenado a código estándar</p>
+          <p><code>practicas/estandares/operaciones.py</code></p>
+          <aside class="notes">
+            Un único fichero que vamos puliendo en pasos: primero
+            formateo (isort/black), luego tipos, luego docstring.
+            Solución completa en practicas/estandares/solucion/.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Punto de partida</h3>
+          <pre><code class="language-python" data-trim>
+            import sys
+            import requests
+            import os
+
+
+            def suma(a,b):
+                return a+b
+            def resta(a, b):
+                return a - b
+          </code></pre>
+          <aside class="notes">
+            Imports desordenados (terceros mezclados con librería estándar)
+            y formato inconsistente (espacios, líneas en blanco entre
+            funciones).
+          </aside>
+        </section>
+
+        <section>
+          <h3>Paso 1 — isort + black</h3>
+          <pre><code class="language-powershell" data-trim>
+            isort operaciones.py
+            black operaciones.py
+          </code></pre>
+        </section>
+        <section>
+          <h3>Resultado</h3>
+          <pre><code class="language-python" data-trim>
+            import os
+            import sys
+
+            import requests
+
+
+            def suma(a, b):
+                return a + b
+
+
+            def resta(a, b):
+                return a - b
+          </code></pre>
+          <aside class="notes">
+            isort separa librería estándar de terceros con una línea en
+            blanco. black añade dos líneas en blanco entre funciones y
+            normaliza los espacios.
+          </aside>
+        </section>
+
+        <section>
+          <h3>Paso 2 — Type hinting</h3>
+          <pre><code class="language-python" data-trim>
+            def f(x: int) -> int:
+                ...
+          </code></pre>
+          <p>Añadimos tipos a los parámetros y al retorno de <code>suma</code> y <code>resta</code></p>
+        </section>
+        <section>
+          <h3>Resultado</h3>
+          <pre><code class="language-python" data-trim>
+            def suma(a: int, b: int) -> int:
+                return a + b
+
+
+            def resta(a: int, b: int) -> int:
+                return a - b
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>Paso 3 — Docstring</h3>
+          <pre><code class="language-python" data-trim>
+            def f(x: int) -> int:
+                """Qué hace, qué recibe, qué devuelve."""
+                ...
+          </code></pre>
+          <p>Documentamos <code>suma</code> y <code>resta</code> (formato a elegir: Google, NumPy...)</p>
+        </section>
+        <section>
+          <h3>Resultado final</h3>
+          <pre><code class="language-python" data-trim="" data-noescape>
+            def suma(a: int, b: int) -> int:
+                """Devuelve la suma de dos números.
+
+                Args:
+                    a: Primer sumando.
+                    b: Segundo sumando.
+
+                Returns:
+                    Resultado de sumar a y b.
+                """
+                return a + b
+          </code></pre>
+          <aside class="notes">
+            Comparar con practicas/estandares/solucion/operaciones.py, que
+            tiene ambas funciones completas.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Si da tiempo: más práctica</h2>
+          <p>Mismo proceso, casos un poco más complejos</p>
+          <aside class="notes">
+            Mismo mecanismo que antes (formato → tipos → docstring), pero
+            ahora con una lista y un DataFrame de polars, para ver qué
+            tipo poner cuando no es un int/str suelto.
+          </aside>
+        </section>
+        <section>
+          <h3>Una lista — antes</h3>
+          <p><code>practicas/estandares/si_da_tiempo/lista.py</code></p>
+          <pre><code class="language-python" data-trim>
+            def media(numeros):
+                return sum(numeros)/len(numeros)
+            def maximo(numeros):
+                return max(numeros)
+          </code></pre>
+        </section>
+        <section>
+          <h3>Una lista — después</h3>
+          <pre><code class="language-python" data-trim="" data-noescape>
+            def media(numeros: list[float]) -> float:
+                """Devuelve la media de una lista de números."""
+                return sum(numeros) / len(numeros)
+
+
+            def maximo(numeros: list[float]) -> float:
+                """Devuelve el valor máximo de una lista de números."""
+                return max(numeros)
+          </code></pre>
+          <aside class="notes">
+            list[float]: tipo genérico de la librería estándar (desde
+            Python 3.9), sin necesidad de importar typing.List.
+          </aside>
+        </section>
+        <section>
+          <h3>Un DataFrame de polars — antes</h3>
+          <p><code>practicas/estandares/si_da_tiempo/dataframe.py</code></p>
+          <pre><code class="language-python" data-trim>
+            import polars as pl
+
+
+            def filtrar_mayores(df, columna, umbral):
+                return df.filter(pl.col(columna) > umbral)
+            def media_columna(df, columna):
+                return df[columna].mean()
+          </code></pre>
+        </section>
+        <section>
+          <h3>Un DataFrame de polars — después</h3>
+          <pre><code class="language-python" data-trim="" data-noescape>
+            def filtrar_mayores(
+                df: pl.DataFrame, columna: str, umbral: float
+            ) -> pl.DataFrame:
+                """Filtra las filas donde una columna supera un umbral."""
+                return df.filter(pl.col(columna) > umbral)
+
+
+            def media_columna(df: pl.DataFrame, columna: str) -> float:
+                """Calcula la media de una columna numérica."""
+                return df[columna].mean()
+          </code></pre>
+          <aside class="notes">
+            El tipo viene de la propia librería (pl.DataFrame): el type
+            hint no se limita a los tipos nativos de Python, funciona
+            igual con tipos de terceros. Solución completa, con
+            docstrings en formato Google, en
+            practicas/estandares/si_da_tiempo/solucion/.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>También existe un estándar para...</h2>
+          <p>la configuración del propio proyecto: <code>pyproject.toml</code></p>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## ¿Qué centraliza?
+
+            - Metadatos: nombre, versión, dependencias...
+            - Configuración del sistema de *build* (setuptools,
+              hatchling...)
+            - Configuración de otras herramientas: `black`, `isort`,
+              `pytest`...
+
+            Note: en vez de un fichero suelto por herramienta en la raíz
+            del proyecto, todo vive en un único sitio. Un solo fichero,
+            TOML (texto plano, declarativo, sin código ejecutable) —
+            no lo confundáis con el antiguo setup.py.
+          </textarea>
+        </section>
+      </section>
+
+      <section>
+        <h2>Recordatorio: debugger</h2>
+        <pre><code class="language-python" data-trim>
+          breakpoint()
+        </code></pre>
+        <p><code>n</code> next · <code>s</code> step · <code>c</code> continue · <code>p &lt;expr&gt;</code> print · <code>q</code> quit</p>
+      </section>
+
+      <section>
+        <section>
+          <h2>Logging</h2>
+          <p>De <code>print()</code> a dejar constancia de qué hace el programa</p>
+          <aside class="notes">
+            print() es cómodo en local, pero no distingue gravedad, no
+            dice de dónde viene el mensaje, y no se puede silenciar sin
+            tocar el código. logging resuelve los tres problemas.
+          </aside>
+        </section>
+        <section>
+          <h3>Niveles</h3>
+          <p>
+            <code>DEBUG</code> &lt;
+            <code>INFO</code> &lt;
+            <code>WARNING</code> &lt;
+            <code>ERROR</code> &lt;
+            <code>CRITICAL</code>
+          </p>
+          <aside class="notes">
+            El nivel configurado es el umbral: con INFO, los mensajes
+            DEBUG quedan silenciados sin borrarlos ni comentarlos.
+          </aside>
+        </section>
+        <section>
+          <h3>Handlers</h3>
+          <pre><code class="language-python" data-trim>
+            import logging
+            from logging.handlers import RotatingFileHandler
+
+            logger = logging.getLogger(__name__)
+            logger.setLevel(logging.INFO)
+
+            stream_handler = logging.StreamHandler()
+            file_handler = RotatingFileHandler(
+                "app.log", maxBytes=1_000_000, backupCount=3
+            )
+
+            logger.addHandler(stream_handler)
+            logger.addHandler(file_handler)
+          </code></pre>
+          <aside class="notes">
+            StreamHandler: a consola. RotatingFileHandler: a fichero, y al
+            llegar a maxBytes lo rota en vez de crecer sin límite,
+            conservando como mucho backupCount ficheros antiguos.
+          </aside>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

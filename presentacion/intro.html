@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Buenas prácticas en Python</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Buenas prácticas en Python</h1>
+        <p>Álvaro Sanz</p>
+      </section>
+
+      <section>
+        <h2>¿Quién soy?</h2>
+        <p>Álvaro Sanz</p>
+        <p>Belerofontech</p>
+        <p><code>alvaro.sanz@belerofontech.com</code></p>
+        <aside class="notes">
+          Presentación libre. Dejar claro que las dudas se pueden
+          preguntar durante el día, no solo al final — el correo es para
+          después del curso.
+        </aside>
+      </section>
+
+      <section>
+        <section>
+          <h2>Objetivo</h2>
+          <p>Descubrir y aprender las bases de diferentes metodologías de
+            trabajo, para encontrar un equilibrio entre eficiencia a la
+            hora de trabajar y robustez del código.</p>
+          <aside class="notes">
+            Esto no es un curso de Python desde cero, es de hábitos de
+            desarrollo — salir con cosas aplicables directamente en el
+            día a día.
+          </aside>
+        </section>
+        <section>
+          <h2>Qué NO es objetivo</h2>
+          <p>Aprender de memoria comandos o sintaxis específica, recursos,
+            librerías, etc.</p>
+          <aside class="notes">
+            Lo importante es el criterio de cuándo y por qué aplicar cada
+            práctica, no memorizar la sintaxis exacta — eso siempre se
+            puede buscar.
+          </aside>
+        </section>
+      </section>
+
+      <section data-markdown>
+        <textarea data-template>
+          ## Qué vamos a trabajar
+
+          **Primera mitad**: entorno, estándares de código, debugger,
+          proyectos, testing, logging
+
+          **Descanso**
+
+          **Segunda mitad**: historial de versiones con git
+
+          Note: primera mitad son buenas prácticas de código Python en
+          sí; segunda mitad es completamente sobre git, mucho más
+          hands-on.
+        </textarea>
+      </section>
+
+      <section>
+        <section>
+          <h2>Cómo conseguís el material</h2>
+          <p>Plan A: <code>git clone</code> del repositorio del curso</p>
+          <aside class="notes">
+            Es, de hecho, vuestro primer contacto con git del día, antes
+            incluso de llegar al bloque de git.
+          </aside>
+        </section>
+        <section>
+          <h3>Plan B: sin acceso a GitHub</h3>
+          <p>Os paso el material de otra forma (USB / carpeta compartida)</p>
+          <aside class="notes">
+            Si no hay GitHub, el material llega igual, solo que sin
+            git de por medio. Git en sí lo practicamos más tarde con el
+            plan B de esa sección (remoto local).
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <h2>Contexto de trabajo</h2>
+        <p>Hoy trabajamos con scripts (<code>.py</code>), no con Jupyter notebooks</p>
+        <p>¿Por qué?</p>
+        <aside class="notes">
+          Por qué: un notebook no versiona bien en git (los diffs de las
+          celdas de salida son ilegibles), no se testea bien con pytest,
+          y breakpoint()/pdb no funciona igual de bien ahí. Todo lo que
+          vemos hoy encaja mejor en un .py normal.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

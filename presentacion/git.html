@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Historial de versiones (git)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Historial de versiones</h1>
+        <p>git</p>
+      </section>
+
+      <section data-markdown>
+        <textarea data-template>
+          ## Filosofía
+
+          - Un **commit**: una fotografía del proyecto + el porqué
+          - Una **rama**: una línea de trabajo independiente
+
+          Note: el historial de commits no es una copia de seguridad, es
+          la documentación de cómo y por qué ha evolucionado el código.
+          "Arreglos" vale mucho menos que "corrige el redondeo de
+          importes en la factura". Una rama permite experimentar y
+          equivocarse sin tocar el trabajo de nadie más, hasta hacer
+          merge.
+        </textarea>
+      </section>
+
+      <section>
+        <section>
+          <h2>Configuración inicial</h2>
+          <p>Quiénes somos, con qué credenciales nos conectamos</p>
+        </section>
+        <section>
+          <h3>Identidad</h3>
+          <pre><code class="language-powershell" data-trim>
+            git config --global user.name "Nombre Apellido"
+            git config --global user.email "correo@ejemplo.com"
+          </code></pre>
+          <aside class="notes">
+            --global: aplica a todos los repos, no solo al actual. Es la
+            identidad con la que quedan firmados los commits.
+          </aside>
+        </section>
+        <section>
+          <h3>Clave SSH</h3>
+          <pre><code class="language-powershell" data-trim>
+            ssh-keygen -t ed25519 -C "correo@ejemplo.com"
+          </code></pre>
+          <aside class="notes">
+            -t ed25519: tipo de clave recomendado hoy (más corto y seguro
+            que RSA). -C: solo una etiqueta para identificarla luego.
+            Enter en todo genera id_ed25519 (privada, nunca se comparte)
+            e id_ed25519.pub (pública, se sube a GitHub).
+          </aside>
+        </section>
+        <section>
+          <h3>Registrar la clave</h3>
+          <pre><code class="language-powershell" data-trim>
+            Get-Content ~/.ssh/id_ed25519.pub | clip
+          </code></pre>
+          <p>GitHub → Settings → SSH and GPG keys → New SSH key</p>
+          <pre><code class="language-powershell" data-trim>
+            ssh -T git@github.com
+          </code></pre>
+          <aside class="notes">
+            El último comando prueba la conexión: debe saludar con el
+            usuario, no pedir contraseña ni dar error de permisos.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Clonar un repositorio</h2>
+          <pre><code class="language-powershell" data-trim>
+            git clone git@github.com:usuario/repositorio.git
+          </code></pre>
+          <aside class="notes">
+            Descarga una copia completa (todo el historial, todas las
+            ramas). URL SSH porque ya tenemos la clave configurada.
+          </aside>
+        </section>
+        <section>
+          <h3>Plan B: sin GitHub</h3>
+          <pre><code class="language-powershell" data-trim>
+            git init --bare curso-practica.git
+            git clone curso-practica.git mi-copia
+          </code></pre>
+          <aside class="notes">
+            Sin acceso a GitHub, tampoco hay forma de montar un servidor
+            para toda el aula: cada persona trabaja con un remoto local
+            propio, en su misma máquina. No hay colaboración real con el
+            grupo, pero la mecánica (clone/push/pull/merge) es idéntica,
+            y no hace falta clave SSH al no haber autenticación de por
+            medio.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <h2>Crear una rama</h2>
+        <pre><code class="language-powershell" data-trim>
+          git checkout -b mi-rama
+        </code></pre>
+        <aside class="notes">
+          Crea y cambia a la rama en un solo comando. Nuestros cambios no
+          afectan a main hasta que hagamos merge: podemos equivocarnos
+          sin riesgo para el resto. "git branch" lista ramas existentes;
+          "git checkout rama" cambia sin crear.
+        </aside>
+      </section>
+
+      <section>
+        <section>
+          <h2>Ciclo básico</h2>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            git status
+          </code></pre>
+          <aside class="notes">
+            El comando que se ejecuta constantemente: rama actual,
+            ficheros cambiados, qué está ya preparado para commit.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            git add &lt;fichero&gt;
+          </code></pre>
+          <aside class="notes">
+            Prepara el fichero para el próximo commit. "git add ." lo
+            prepara todo de golpe.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            git commit -m "mensaje descriptivo"
+          </code></pre>
+          <aside class="notes">
+            El mensaje explica el porqué, no el qué — el qué ya se ve en
+            el diff.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            git push -u origin mi-rama
+          </code></pre>
+          <aside class="notes">
+            -u vincula la rama local con la remota; a partir de ahí basta
+            "git push" a secas.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            git pull
+          </code></pre>
+          <aside class="notes">
+            Descarga e integra cambios del remoto. Hacerlo al empezar a
+            trabajar, para no acumular demasiada diferencia con el resto
+            del equipo.
+          </aside>
+        </section>
+      </section>
+
+      <section>
+        <h2>Merge</h2>
+        <pre><code class="language-powershell" data-trim>
+          git merge main
+        </code></pre>
+        <aside class="notes">
+          Integra en la rama actual los commits de otra rama. Para poner
+          al día una rama de trabajo, o para integrar una rama acabada de
+          vuelta en main. Si dos ramas tocan lo mismo de forma
+          incompatible: conflicto (siguiente bloque).
+        </aside>
+      </section>
+
+      <section>
+        <section>
+          <h2>Práctica</h2>
+          <p>Encadenamos todo, de principio a fin</p>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            1. Clonar el repositorio del curso
+            2. `git checkout -b practica-&lt;tu-nombre&gt;`
+            3. Crear `practicas/git/participantes/&lt;tu-nombre&gt;.txt`
+            4. `git add` + `git commit -m "..."`
+            5. `git push -u origin practica-&lt;tu-nombre&gt;`
+
+            Note: cada persona su propio fichero, para no pisarse con
+            nadie — así se puede hacer commit/push en paralelo sin
+            conflictos.
+          </textarea>
+        </section>
+        <section>
+          <h3>Después</h3>
+          <p>Cuando el formador integre algunas ramas en <code>main</code>:</p>
+          <pre><code class="language-powershell" data-trim>
+            git checkout main
+            git pull
+            git checkout practica-&lt;tu-nombre&gt;
+            git merge main
+          </code></pre>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>
