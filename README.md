@@ -565,12 +565,56 @@ Descarga una copia completa del repositorio (todo el historial, todas las ramas)
 
 Si no hay acceso a GitHub, tampoco va a haber forma de montar un servidor local accesible por toda la red del aula — así que el plan B es que cada persona trabaje con un remoto local propio, en su misma máquina. No permite ver el trabajo del resto del grupo, pero sirve para practicar exactamente la misma mecánica (`clone`, `push`, `pull`, `merge`): git no distingue entre un remoto en GitHub y una carpeta en el propio disco, solo cambia el protocolo.
 
+Un repositorio **bare** es un repositorio sin directorio de trabajo: no tiene ficheros para editar a la vista, solo la base de datos interna de git (lo que normalmente vive escondido dentro de la carpeta `.git` de un repo normal). Es justo lo que hay detrás de GitHub/GitLab en sus servidores: un sitio pensado solo para recibir `push` y servir `clone`/`pull`, no para trabajar directamente en él.
+
+Partiendo de la carpeta del material (si se descargó como ZIP, sin `.git`), primero la convertimos en un repositorio real:
+
 ```powershell
+cd material-del-curso
+git init
+git add .
+git commit -m "material del curso"
+```
+
+Creamos el remoto bare, como carpeta hermana:
+
+```powershell
+cd ..
 git init --bare curso-practica.git
+```
+
+Enlazamos la carpeta del material con ese remoto y subimos el commit:
+
+```powershell
+cd material-del-curso
+git remote add origin ../curso-practica.git
+git branch -M master
+git push -u origin master
+```
+
+(`git branch -M master` renombra la rama a `master` si `git init` la había llamado `main`, o al revés — comprobad con `git branch` cuál os ha salido antes de decidir el nombre).
+
+Y clonamos en un sitio nuevo para comprobar que el remoto funciona:
+
+```powershell
+cd ..
 git clone curso-practica.git mi-copia
 ```
 
-`--bare` crea un repositorio sin directorio de trabajo visible, que solo existe para que otros (aquí, nuestra propia copia) hagan `push`/`pull` contra él. A partir de `mi-copia`, el resto del flujo es idéntico y tampoco hace falta clave SSH, al no haber autenticación de por medio.
+**Un aviso esperable, no un error**: si la rama por defecto del remoto bare (su `HEAD`) no coincide con el nombre de la rama a la que hemos hecho `push` (por ejemplo, el remoto "espera" `main` pero hemos subido a `master`), el `clone` avisa con `warning: remote HEAD refers to nonexistent ref, unable to checkout` y nos deja en una rama vacía sin commits. El contenido sí está ahí, solo hace falta cambiar a la rama correcta:
+
+```powershell
+git checkout master
+```
+
+Para evitar el aviso de raíz, se puede corregir el `HEAD` del propio remoto bare una sola vez, justo después del primer `push`:
+
+```powershell
+cd curso-practica.git
+git symbolic-ref HEAD refs/heads/master
+```
+
+Tampoco hace falta clave SSH para nada de esto, al no haber autenticación de por medio: es solo una ruta de fichero.
 
 ### Crear una rama
 

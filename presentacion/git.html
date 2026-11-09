@@ -106,17 +106,55 @@
         </section>
         <section>
           <h3>Plan B: sin GitHub</h3>
-          <pre><code class="language-powershell" data-trim>
-            git init --bare curso-practica.git
-            git clone curso-practica.git mi-copia
-          </code></pre>
+          <p>Un remoto <strong>bare</strong>: repo sin directorio de
+            trabajo, solo para recibir <code>push</code> y servir
+            <code>clone</code>/<code>pull</code> — lo que hay detrás de
+            GitHub en sus servidores</p>
           <aside class="notes">
             Sin acceso a GitHub, tampoco hay forma de montar un servidor
-            para toda el aula: cada persona trabaja con un remoto local
-            propio, en su misma máquina. No hay colaboración real con el
-            grupo, pero la mecánica (clone/push/pull/merge) es idéntica,
-            y no hace falta clave SSH al no haber autenticación de por
-            medio.
+            para toda el aula: cada persona trabaja con un remoto bare
+            local propio, en su misma máquina. No hay colaboración real
+            con el grupo, pero la mecánica (clone/push/pull/merge) es
+            idéntica, y no hace falta clave SSH al no haber autenticación
+            de por medio.
+          </aside>
+        </section>
+        <section>
+          <pre><code class="language-powershell" data-trim>
+            cd material-del-curso
+            git init && git add . && git commit -m "material del curso"
+
+            cd ..
+            git init --bare curso-practica.git
+
+            cd material-del-curso
+            git remote add origin ../curso-practica.git
+            git branch -M master
+            git push -u origin master
+          </code></pre>
+          <aside class="notes">
+            Partimos del material (ZIP, sin .git) y lo convertimos primero
+            en repo real antes de poder hacer push a ningún sitio.
+            git branch -M master: por si "git init" lo había llamado
+            "main" en vez de "master" — comprobar con "git branch".
+          </aside>
+        </section>
+        <section>
+          <h3>Un aviso esperable</h3>
+          <pre><code class="language-text" data-trim>
+            warning: remote HEAD refers to nonexistent ref,
+            unable to checkout
+          </code></pre>
+          <pre><code class="language-powershell" data-trim>
+            git checkout master
+          </code></pre>
+          <aside class="notes">
+            Pasa si el HEAD del remoto bare apunta a "main" pero hemos
+            hecho push a "master": el clone te deja en una rama vacía sin
+            commits. No es un error, el contenido está en la otra rama —
+            git checkout master lo trae. Para evitarlo de raíz: dentro
+            del propio remoto bare, "git symbolic-ref HEAD
+            refs/heads/master" justo después del primer push.
           </aside>
         </section>
       </section>
