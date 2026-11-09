@@ -7,12 +7,11 @@ Curso de 4 horas, dividido en dos mitades. Este documento recoge el guion y los 
 | Bloque | Duración estimada | Tipo |
 |---|---|---|
 | [Preparación de nuestro entorno de trabajo](#preparación-de-nuestro-entorno-de-trabajo) | 30-45 min | Práctica (el setup siempre da problemas, hay que dejarle margen) |
-| [Estándares de escritura de código](#estándares-de-escritura-de-código) | 15 min | Teoría |
-| [Python debugger](#python-debugger) | 15 min | Teoría ~1 min + práctica breve. Clave transmitir que depurar >>> `print()` |
-| [Proyectos](#proyectos) | ≤ 10 min | Pasada rápida, sin práctica dedicada |
-| [Testing con pytest](#testing-con-pytest) | 30-45 min | Práctica: escribir un test sencillo y aprovechar para aplicar `isort`/`black` (vistos en Estándares) |
+| [Estándares de escritura de código](#estándares-de-escritura-de-código) | 15-20 min | Teoría breve + práctica: formatear, tipar y documentar una función (`isort`/`black`, type hints, docstring) |
+| [Python debugger](#python-debugger) | ~2 min | Recordatorio exprés (el grupo ya lo ha visto en un curso anterior): `breakpoint()` y los comandos básicos |
+| [Testing con pytest](#testing-con-pytest) | 30-45 min | Práctica: tests sobre una función, comparación de floats, y validación de datos con `pandera`/`polars` |
 
-`Logging` se cubre como complemento breve sin tiempo específico asignado, encajado junto al bloque de debug/testing.
+`Proyectos` (`pyproject.toml`) se queda como mención de una línea dentro de Estándares, sin bloque propio. `Logging` se cubre como complemento breve sin tiempo específico asignado, encajado al final del bloque de Estándares.
 
 Lo que sobre de esta primera mitad se dedica a introducir la filosofía de git, de cara a la segunda mitad.
 
@@ -248,6 +247,74 @@ black .
 ```
 
 Es habitual configurar estas herramientas para que se ejecuten automáticamente al guardar el fichero, o como parte de un *pre-commit hook* antes de cada commit, de forma que ningún código sin formatear llegue al repositorio.
+
+## Práctica
+
+De código desordenado a código estándar, sobre un único fichero que vamos puliendo en pasos: formateo (`isort`/`black`), tipos, docstring. Punto de partida en `practicas/estandares/operaciones.py`; solución completa en `practicas/estandares/solucion/operaciones.py`.
+
+Punto de partida:
+
+```python
+import sys
+import requests
+import os
+
+
+def suma(a,b):
+    return a+b
+def resta(a, b):
+    return a - b
+```
+
+Paso 1, formateo:
+
+```powershell
+isort operaciones.py
+black operaciones.py
+```
+
+```python
+import os
+import sys
+
+import requests
+
+
+def suma(a, b):
+    return a + b
+
+
+def resta(a, b):
+    return a - b
+```
+
+Paso 2, type hinting en `suma` y `resta` (parámetros y retorno). Paso 3, docstring en ambas. El resultado final es exactamente `practicas/estandares/solucion/operaciones.py`, ya visto en la sección de [Docstring](#docstring).
+
+### Si da tiempo
+
+Mismo mecanismo, con tipos menos triviales que un `int`/`str` suelto — para ver qué poner cuando el parámetro es una colección o un tipo de una librería de terceros. Ficheros en `practicas/estandares/si_da_tiempo/` (con su `solucion/`).
+
+Una lista:
+
+```python
+def media(numeros: list[float]) -> float:
+    """Devuelve la media de una lista de números."""
+    return sum(numeros) / len(numeros)
+```
+
+`list[float]`: tipo genérico de la librería estándar (desde Python 3.9), sin necesidad de importar `typing.List`.
+
+Un `DataFrame` de polars:
+
+```python
+def filtrar_mayores(
+    df: pl.DataFrame, columna: str, umbral: float
+) -> pl.DataFrame:
+    """Filtra las filas donde una columna supera un umbral."""
+    return df.filter(pl.col(columna) > umbral)
+```
+
+El tipo viene de la propia librería (`pl.DataFrame`): el type hint no se limita a los tipos nativos de Python, funciona igual con tipos de terceros.
 
 Ya que hablamos de estandarizar, esto no se limita al propio código: también existe un estándar para centralizar la configuración del proyecto en sí, el fichero `pyproject.toml` (ver [Proyectos](#proyectos)).
 
@@ -492,9 +559,9 @@ logger.addHandler(file_handler)
 
 # Historial de versiones (git)
 
-Segunda mitad del curso. Bloque pendiente de desarrollar; de momento se deja el esquema acordado, con el contenido priorizado en tres niveles según el tiempo disponible y el nivel del grupo.
+Segunda mitad del curso. El Núcleo ya está desarrollado en detalle; quedan pendientes Conflictos y Metodologías (dentro del propio Núcleo) y el contenido de "Si da tiempo"/"Avanzado", priorizado en tres niveles según el tiempo disponible y el nivel del grupo.
 
-Idea a valorar: usar git de forma transversal desde el inicio del día, descargando el propio material del curso mediante un `git clone` en lugar de dejarlo solo para la segunda mitad.
+Idea a valorar: usar git de forma transversal desde el inicio del día, descargando el propio material del curso mediante un `git clone` en lugar de dejarlo solo para la segunda mitad (a confirmar).
 
 ## Núcleo (se cubre sí o sí)
 
@@ -546,7 +613,7 @@ Por último, si tenemos varias claves SSH (por ejemplo, una personal y otra del 
 Host github.com
   HostName github.com
   User git
-  IdentityFile C:\Users\Alvaro\.ssh\github_windows
+  IdentityFile C:\Users\<usuario>\.ssh\github_windows
   IdentitiesOnly yes
   AddKeysToAgent yes
 ```
@@ -622,7 +689,7 @@ Tampoco hace falta clave SSH para nada de esto, al no haber autenticación de po
 git checkout -b mi-rama
 ```
 
-Crea una rama nueva a partir de donde estamos y nos cambia a ella en un solo comando (`-b` de *branch*). Trabajar en nuestra propia rama significa que nuestros cambios no afectan a `main` hasta que decidamos juntarlos — podemos hacer commits a medias, equivocarnos y rehacer sin ningún riesgo para el resto del equipo.
+Crea una rama nueva a partir de donde estamos y nos cambia a ella en un solo comando (`-b` de *branch*). Trabajar en nuestra propia rama significa que nuestros cambios no afectan a la rama principal (`main` o `master`, según cómo esté configurado el repositorio — comprobadlo con `git branch`) hasta que decidamos juntarlos — podemos hacer commits a medias, equivocarnos y rehacer sin ningún riesgo para el resto del equipo.
 
 `git branch` (sin más) lista las ramas que existen; `git checkout <rama>` cambia a una ya existente sin crear ninguna.
 
