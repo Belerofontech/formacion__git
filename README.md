@@ -597,7 +597,7 @@ git config --global user.email "correo@ejemplo.com"
 
 `--global` aplica esta configuración a todos los repositorios del equipo, no solo al actual.
 
-Generamos un par de claves SSH para autenticarnos sin contraseña en cada `push`/`pull`:
+Generamos un par de claves SSH para autenticarnos sin contraseña en cada `push`/`pull` (ver también la [documentación oficial de GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=windows)):
 
 ```powershell
 ssh-keygen -t ed25519 -C "correo@ejemplo.com"
@@ -611,7 +611,7 @@ Copiamos la clave pública al portapapeles:
 Get-Content ~/.ssh/id_ed25519.pub | clip
 ```
 
-Y la pegamos en GitHub: *Settings* → *SSH and GPG keys* → *New SSH key*. Comprobamos que la conexión funciona:
+Y la pegamos en GitHub: *Settings* → *SSH and GPG keys* → *New SSH key* (ver también la [documentación oficial de GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=windows)). Comprobamos que la conexión funciona:
 
 ```powershell
 ssh -T git@github.com

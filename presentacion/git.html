@@ -70,6 +70,7 @@
           <pre><code class="language-powershell" data-trim>
             ssh-keygen -t ed25519 -C "correo@ejemplo.com"
           </code></pre>
+          <p><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=windows" target="_blank">Documentación oficial de GitHub</a></p>
           <aside class="notes">
             -t ed25519: tipo de clave recomendado hoy (más corto y seguro
             que RSA). -C: solo una etiqueta para identificarla luego.
@@ -86,6 +87,7 @@
           <pre><code class="language-powershell" data-trim>
             ssh -T git@github.com
           </code></pre>
+          <p><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?platform=windows" target="_blank">Documentación oficial de GitHub</a></p>
           <aside class="notes">
             El último comando prueba la conexión: debe saludar con el
             usuario, no pedir contraseña ni dar error de permisos.
