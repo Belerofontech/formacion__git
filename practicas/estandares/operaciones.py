@@ -5,14 +5,14 @@ import requests
 
 
 def suma(a: int, b: int) -> int:
-    """Función que realiza una suma.
+    """Just add two numbers, a and b.
 
     Args:
-        a (int): sumando 1.
-        b (int): sumando 2.
+        a (int): number 1.
+        b (int): number 2.
 
     Returns:
-        int: resultado.
+        int: result.
     """
     return a + b
 
