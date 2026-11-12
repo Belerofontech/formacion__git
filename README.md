@@ -136,6 +136,18 @@ Si hacemos click en `venv` abriremos un panel en el que podemos ver los diferent
 
 ![Panel de selección de intérprete de Python](imagenes/imagen-002.png)
 
+## Atajos de teclado útiles
+
+Unos pocos atajos ahorran muchos viajes al ratón durante la sesión:
+
+* `Ctrl S`: guarda el fichero. El más fundamental de todos — sin guardar, ningún cambio llega al intérprete, ni tampoco a `black`/`isort` si están configurados para ejecutarse al guardar.
+* `Alt` + flechas arriba/abajo: añade un cursor en la línea de encima o debajo de la actual (multicursor), para escribir o editar varias líneas a la vez en lugar de repetir la misma edición línea a línea.
+* `Ctrl B`: muestra u oculta la barra lateral del explorador de ficheros, para ganar espacio de pantalla una vez sabemos en qué fichero estamos trabajando.
+* `Ctrl Ñ` (o `Ctrl J` si el teclado no responde bien a esa combinación): muestra u oculta el panel inferior, donde vive la terminal integrada. En teclado español conviene saber que existe esta alternativa, porque el atajo "oficial" (`` Ctrl ` ``) no siempre se comporta igual según el teclado.
+* `Ctrl Shift P`: abre la paleta de comandos, el buscador universal de VS Code. Sirve también para encontrar el atajo de cualquier acción: basta con buscar "keyboard shortcuts" para abrir la chuleta (*cheat sheet*) oficial con todos los atajos disponibles.
+
+![Búsqueda de "keyboard" en la paleta de comandos de VS Code](imagenes/imagen-009.png)
+
 # Estándares de escritura de código
 
 Se trata tanto del uso de ciertas herramientas como de implementar un método de trabajo estandarizado.
