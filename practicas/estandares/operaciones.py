@@ -1,6 +1,8 @@
 import os
 import sys
+
 import requests
+
 
 def suma(a, b):
     return a + b
